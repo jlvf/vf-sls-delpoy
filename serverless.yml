@@ -25,6 +25,17 @@ provider:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: 
+        - "s3:GetObject"
+        - "s3:ListBucket"
+      Resource:
+         Fn::Join:
+           - ""
+           - - "arn:aws:s3:::"
+             - ${self:provider.deploymentBucket}
+             
 
 functions:
   initstack:
@@ -33,3 +44,4 @@ functions:
       APP_NAME: ${self:app}
       SLS_STAGE_NAME: ${self:provider.stage}
       STACK_NAME: ${self:provider.stackName}
+      SLS_DEPLOY_BUCKET: ${self:provider.deploymentBucket}
