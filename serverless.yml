@@ -1,18 +1,13 @@
 service:
   name: vf-deploy-service
-# app and org for use with dashboard.serverless.com
 app: vf-deploy-app
 org: jlehr
-
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
-
-# Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-
 provider:
   name: aws
   runtime: nodejs10.x
@@ -21,10 +16,9 @@ provider:
   stackName: ${opt:stackName, 'dev-stack'}
   deploymentBucket:
     name: bitiverse-sls-deployments
-  apiGateway:
-    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    DYNAMODB_TABLE_NAME: ${self:app}-${self:provider.stackName}
   iamRoleStatements:
     - Effect: "Allow"
       Action: 
@@ -35,13 +29,41 @@ provider:
            - ""
            - - "arn:aws:s3:::"
              - ${self:provider.deploymentBucket}
-             
-
+    - Effect: "Allow"
+      Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:PutItem"
+          - "dynamodb:Query"
+      Resource: 
+        - "Fn::GetAtt": [ DynamoDbDeployTable, Arn ]
 functions:
   initstack:
     handler: handler.initstack
+    description: "Grabs sls deployment json and uploads to DynamodDB"
     environment:
       APP_NAME: ${self:app}
+      SLS_SERVICE_NAME: ${self:service.name}
       SLS_STAGE_NAME: ${self:provider.stage}
       STACK_NAME: ${self:provider.stackName}
+      DDB_TABLE_NAME: ${self:provider.environment.DYNAMODB_TABLE_NAME}
       SLS_DEPLOY_BUCKET: ${self:provider.deploymentBucket}
+      SLS_BUCKET_PREFIX: serverless/${self:service.name}/${self:provider.stage}
+resources:
+  Resources:
+    DynamoDbDeployTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}
+        AttributeDefinitions:
+        - AttributeName: service_name
+          AttributeType: S
+        - AttributeName: created_utc_ms
+          AttributeType: N
+        KeySchema:
+        - AttributeName: service_name
+          KeyType: HASH
+        - AttributeName: created_utc_ms
+          KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
