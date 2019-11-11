@@ -61,6 +61,8 @@ Remote
 sls invoke --function=initstack --aws-profile myaws
 ```
 
-## Questions I have
+## Questions
 
-1. In serverless.yml when concatinating the service name in the functions enviornment variables I tried Fn:Join; it returned [object,object] the solution was to simply do the serverless ${self:...}/${self:..} this gave the desired results; However, when creating the DynamoDB table name in the provider environment variables Fn:Join worked as expected. Is this a serverless peculiarity? 
+1. In serverless.yml when concatinating the service name in the functions enviornment variables I tried Fn:Join; it returned [object,object] the solution was to simply do the serverless ${self:...}/${self:..} this gave the desired results; However, when creating the DynamoDB table name in the provider environment variables Fn:Join worked as expected. Is this a serverless peculiarity?
+
+2. Is there a way to invoke my local function on aws without deploying?
