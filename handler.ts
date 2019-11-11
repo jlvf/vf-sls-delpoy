@@ -20,7 +20,7 @@ export const initstack = async (event, _context) => {
       message: didTemplateInsert ? process.env.SLS_SERVICE_NAME + " has been deployed" 
                                  : process.env.SLS_SERVICE_NAME + " template could not be inserted into " + process.env.DDB_TABLE_NAME,
       // templateKey: slsTemplateObject.Key
-      // input: event,
+      input: event,
       // SLS_BUCKET_PREFIX: process.env.SLS_BUCKET_PREFIX
       // env: process.env
     }, null, 2),
