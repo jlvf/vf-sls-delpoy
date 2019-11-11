@@ -63,10 +63,48 @@ sls invoke --function=initstack --aws-profile myaws
 
 ## Plugins
 
-Create
+1. Create
 ```bash
+mkdir sls_deployalizer
+cd sls_deployalizer
 sls create --template plugin
+npm init
 ```
+
+2. Modify index.js
+```js
+ this.hooks = {
+      'before:deploy:deploy': this.beforeWelcome.bind(this),     
+      'after:deploy:deploy': this.afterHelloWorld.bind(this),
+ };
+```
+
+3. Link plugin to npm
+```bash
+npm link
+```
+
+4. Link plugin to project
+```bash
+cd path/to/project
+npm link welcome
+```
+
+5. results
+```bash
+sls deploy --aws-profile myaws
+
+  Serverless: Bundling with Webpack...
+  ...
+  ...
+  Serverless: Hello from Serverless!
+  ...
+  ...
+  ...
+  Serverless: Please come again!
+
+```
+
 
 ## Questions
 
