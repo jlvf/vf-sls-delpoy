@@ -1,0 +1,11 @@
+{
+  "name": "sls_deployalizer",
+  "version": "1.0.0",
+  "description": "Invokes initstack to copy the serverless template json file from the deployment bucket to DynamoDB\" ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
