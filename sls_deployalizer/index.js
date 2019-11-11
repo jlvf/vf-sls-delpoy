@@ -7,12 +7,11 @@ class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
-    // this.provider = this.serverless.getProvider(this.serverless.service.provider.name);
 
     this.commands = {
       sls_deployalizer: {
-        usage: 'Helps you start your first Serverless plugin',
-        lifecycleEvents: ['beforeDeploy'],
+        usage: 'Invokes the initstack function after deployment',
+        lifecycleEvents: ['beforeDeploy', 'afterDeploy'],
         options: {
           slsd: {
             usage: 'Use the SLS Deployalizer Plugin (e.g. "--slsd")',
@@ -31,10 +30,6 @@ class ServerlessPlugin {
     };
 
     this.hooks = {
-      // 'before:welcome:hello': this.beforeWelcome.bind(this),
-      // 'welcome:hello': this.welcomeUser.bind(this),
-      // 'welcome:world': this.displayHelloMessage.bind(this),
-      // 'after:welcome:world': this.afterHelloWorld.bind(this),
       'before:deploy:deploy': this.beforeDeploy.bind(this),     
       'after:deploy:deploy': this.afterDeploy.bind(this),
     };
@@ -99,7 +94,6 @@ class ServerlessPlugin {
       });
       child.stdout.on('data', (data) => {
         this.printResponse(data.toString());
-        // this.serverless.cli.log(data.toString());
       });  
     } 
   }
@@ -137,7 +131,4 @@ class ServerlessPlugin {
 
 }
 
-
-
-  
 module.exports = ServerlessPlugin;
