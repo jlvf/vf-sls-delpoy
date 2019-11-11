@@ -19,3 +19,7 @@ Make sure nodejs, npm, serverless and aws-cli are installed
 |https://serverless.com/| Cloud CI/CD deployment service|
 |https://serverless.com/framework/docs/providers/aws/| Serverless CLI Docs |
 |https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/| AWS-SDK for JavaScript |
+|https://www.linkedin.com/pulse/serverless-plugins-michael-vargas/| Plugin Tutorial for deploy |
+|https://stackoverflow.com/questions/47446075/getting-output-of-child-process-created-with-inherit| How to get child process to output and also have child process share current process stdio|
+|https://serverless.com/blog/writing-serverless-plugins/| plugin tutorial part 1 |
+|https://serverless.com/blog/writing-serverless-plugins-2/ | plugin tutorial part 2 |
