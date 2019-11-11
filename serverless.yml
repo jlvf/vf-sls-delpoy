@@ -8,6 +8,7 @@ custom:
     includeModules: true
 plugins:
   - serverless-webpack
+  - sls_deployalizer
 provider:
   name: aws
   runtime: nodejs10.x
