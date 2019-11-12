@@ -17,11 +17,22 @@ Make sure nodejs, npm, serverless and aws-cli are installed
 sls deploy --slsd --count --avg ...
 ````
 
-| Command | Description | Options |
-|:--------| :---------- | :------ |
-|--slsd   | Enables the sls_deployalizer plugin, this must be enabled for all other commands to work. |...|
-|--stats  | Returns the deployment statistics such as number of deployments and deployment averages |...|
-|--view   | Returns the current template, you can mix and match each option by seperating them by a comma: `--view download,resources,functions`<br> | <table><tbody><tr><td>null</td><td>Display entire template</td></tr><tr><td>resources</td><td>Display only the aws logical resources</td></tr><tr><td>functions</td><td>Display only the lambda functions</td></tr><tr><td>download</td><td>Saves the active templates file in ./template/...<br> ./templates will be created if it dows not exist</td></tr></tbody></table> |
+| Command | Description |
+|:--------| :---------- |
+|--slsd   | Enables the sls_deployalizer plugin, this must be enabled for all other commands to work. |
+|--stats  | Returns the deployment statistics such as number of deployments and deployment averages |
+|--view   | Returns the current serverless deploy template or parts of the template |
+
+### **--view options**
+
+> --view options can be mixed and matched by delaminating them with a comma: `--view download,resources,functions`
+
+| Option  | Description |
+|:----------| :---------- |
+|no value   | Providing an empty value will cause the entire serverless template to print |
+|resources  | Display only the aws logical resources |
+|functions  | Display only the lambda functions |
+|download   | Saves the active templates file in ./templates/...<br> ./templates will be created if it does not exist |
 
 ## Resources
 
