@@ -7,5 +7,6 @@ export interface ResponseInterface {
         message?: string;
         deploymentCount?: number;
         stats?: DeployStatsInterface;
+        template?: string;
     };
   }
