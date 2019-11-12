@@ -20,8 +20,7 @@ sls deploy --slsd --count --avg ...
 | Command | Description |
 |:--------| :---------- |
 |--slsd   | Enables the sls_deployalizer plugin, this must be enabled for all other commands to work. |
-|--count  | Gives a total deployment count from the number of serverless templates in DynamodDB. |
-|--avg    | Calculates the average time between each deployment. |
+|--stats  | Returns the deployment statistics such as number of deployments and deployment averages |
 
 ## Resources
 
