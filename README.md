@@ -14,7 +14,7 @@ Make sure nodejs, npm, serverless and aws-cli are installed
 > These options are an extension to the **sls deploy** command. You must enable the sls_deployalizer by adding the --slsd option
 
 ```bash
-sls deploy --slsd --count --avg ...
+sls deploy --slsd --stats --view resources,download ...
 ````
 
 | Command | Description |
