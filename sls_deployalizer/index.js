@@ -4,7 +4,10 @@ const child_process = require('child_process');
 
 class ServerlessPlugin {
 
+  startDeploy = 0;
+
   constructor(serverless, options) {
+    
     this.serverless = serverless;
     this.options = options;
 
@@ -17,13 +20,9 @@ class ServerlessPlugin {
             usage: 'Use the SLS Deployalizer Plugin (e.g. "--slsd")',
             required: false,
           },
-          avg: {
-            usage: 'Get the average time between deployments (e.g. "--avg")',
+          stats: {
+            usage: 'Get the deployment statistics (e.g. "--stats")',
             required: false,
-          },
-          count: {
-            usage: 'Get the number of past deployments (e.g. "--count")',
-            required: false
           }
         },
       },
@@ -35,30 +34,24 @@ class ServerlessPlugin {
     };
   }
 
-  isSlsd() {
-    return typeof this.options['slsd'] !== "undefined";
-  }
-
-  isAvg() {
-    return typeof this.options['avg'] !== "undefined" && this.isSlsd();
-  }
-
-  isCount() {
-    return typeof this.options['count'] !== "undefined" && this.isSlsd();
+  isSlsd(option) {
+    if (!option) {
+      return typeof this.options['slsd'] !== "undefined";
+    } else {
+      return typeof this.options[option] !== "undefined";
+    }
   }
 
   beforeDeploy() {
+    this.startDeploy = new Date().getTime();
     if (this.isSlsd()) {
       this.serverless.cli.log('');
       this.serverless.cli.log('--------------------------------------');
       this.serverless.cli.log('-          SLS_DEPLOYALIZER          -');
       this.serverless.cli.log('--------------------------------------');
     }
-    if(this.isAvg()) {
-      this.serverless.cli.log('- Return Average Time Between Deployments');
-    }
-    if(this.isCount()) {
-      this.serverless.cli.log('- Return Number Of Past Deployments');
+    if(this.isSlsd('stats')) {
+      this.serverless.cli.log('- Get deployment statistics');
     }
     this.serverless.cli.log('');
   }
@@ -66,11 +59,12 @@ class ServerlessPlugin {
   getCustomOptions() {
     const options = [];
     const data = {};
-    if (this.isCount()) {
-      data.count = true;
+    data.deploytime_utc_ms = new Date().getTime() - this.startDeploy;
+    if (this.isSlsd()) {
+      data.slsd = true;
     }
-    if (this.isAvg()) {
-      data.avg = true;
+    if (this.isSlsd('stats')) {
+      data.stats = true;
     }
     if (typeof this.options['aws-profile'] !== 'undefined') {
       options.push('--aws-profile');
@@ -93,38 +87,39 @@ class ServerlessPlugin {
         detached: true,
       });
       child.stdout.on('data', (data) => {
-        this.printResponse(data.toString());
+        this.printResponse(JSON.parse(data.toString()));
       });  
     } 
   }
 
-  printHelper(bump, jsonobj) {
-    const keys = Object.keys(jsonobj);
+  printHelper(bump, data) {
+    const keys = Object.keys(data);
     for (const key of keys) {
-      if (typeof jsonobj[key] === 'object') {
+      if (typeof data[key] === 'object') {
         this.serverless.cli.log(bump+key +":");
         bump = bump + '\t';
-        this.printHelper(bump, jsonobj[key]);
+        this.printHelper(bump, data[key]);
       } else {
-        this.serverless.cli.log(bump+key+": "+jsonobj[key]);
+        this.serverless.cli.log(bump+key+": "+data[key]);
       }
     }
   }
 
-  printResponse(jsonStr) {
-    const data = JSON.parse(jsonStr);
-    const body = JSON.parse(data.body);
-    const keys = Object.keys(body);
+  printResponse(data) {
+    // this.serverless.cli.log(jsonStr);
+    // const data = JSON.parse(jsonStr);
+    // const body = JSON.parse(data.body);
+    const keys = Object.keys(data);
     this.serverless.cli.log('');
     this.serverless.cli.log('--------------------------------------');
     this.serverless.cli.log('-         Function Response          -');
     this.serverless.cli.log('--------------------------------------');
     for (const key of keys) {
-      if (typeof body[key] === 'object') {
+      if (typeof data[key] === 'object') {
         this.serverless.cli.log(key +":");
-        this.printHelper('\t', body[key]);
+        this.printHelper('\t', data[key]);
       } else {
-        this.serverless.cli.log(key+": "+body[key]);
+        this.serverless.cli.log(key+": "+data[key]);
       }
     }
   }
