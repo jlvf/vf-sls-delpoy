@@ -4,6 +4,8 @@ import { DeployTableSchemaInterface } from "./interfaces/DeployTableSchemaInterf
 import { DeployStatsInterface } from "./interfaces/DeployStatsInterface";
 
 export class Deploy {
+
+    public template: any;
     
     constructor(private deploy: DeployConstructInterface) {}
 
@@ -44,6 +46,8 @@ export class Deploy {
             deploytime_utc_ms: this.deploy.deploytime_utc_ms,
             template: await this.getSLSTemplateFileObject(slsTemplateObj.Key)
         };
+
+        this.template = Item;
 
         const params = {
             TableName: this.deploy.tableName,
