@@ -32,6 +32,7 @@ provider:
       Action:
           - "dynamodb:GetItem"
           - "dynamodb:PutItem"
+          - "dynamodb:Scan"
           - "dynamodb:Query"
       Resource: 
         - "Fn::GetAtt": [ DynamoDbDeployTable, Arn ]
