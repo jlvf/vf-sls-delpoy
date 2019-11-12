@@ -40,6 +40,10 @@ export const initstack = async (event, _context) => {
   if (typeof event.stats !== "undefined") {
     response.body.stats = await deploy.getDeploymentStats();
   }
+  if (typeof event.view !== "undefined") {
+    response.body.template = JSON.stringify(deploy.template);
+  }
+
   response.body.lambdaRuntime = deploy.convertMsToTime((new Date().getTime()) - lambdastart);
   return response;
 }
