@@ -8,4 +8,5 @@ export interface DeployConstructInterface {
     s3Prefix?: string;
     slsServiceName: string;
     tableName: string;
+    deploytime_utc_ms: number;
 }
