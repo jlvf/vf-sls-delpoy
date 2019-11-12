@@ -9,7 +9,7 @@ Make sure nodejs, npm, serverless and aws-cli are installed
 1. Clone the repo and cd into the directory
 2. run `npm install`
 
-## SLS Deployalizer Plugin Options
+## SLS Deployalizer Plugin Commands
 
 > These options are an extension to the **sls deploy** command. You must enable the sls_deployalizer by adding the --slsd option
 
@@ -23,7 +23,7 @@ sls deploy --slsd --count --avg ...
 |--stats  | Returns the deployment statistics such as number of deployments and deployment averages |
 |--view   | Returns the current serverless deploy template or parts of the template |
 
-### **--view options**
+### **View Options**
 
 > --view options can be mixed and matched by delaminating them with a comma: `--view download,resources,functions`
 
