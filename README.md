@@ -22,6 +22,7 @@ sls deploy --slsd --stats --view resources,download ...
 |--slsd   | Enables the sls_deployalizer plugin, this must be enabled for all other commands to work. |
 |--stats  | Returns the deployment statistics such as number of deployments and deployment averages |
 |--view   | Returns the current serverless deploy template or parts of the template |
+|--gui    | Opens an Angular gui interface to display deployment info |
 
 ### **View Options**
 
