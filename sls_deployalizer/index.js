@@ -1,10 +1,13 @@
 'use strict';
 
 const child_process = require('child_process');
+const spawn = child_process.spawn;
 
 class ServerlessPlugin {
 
   startDeploy = 0;
+  gui = null;
+  exitApp = false;
 
   constructor(serverless, options) {
     
@@ -27,6 +30,10 @@ class ServerlessPlugin {
           view: {
             usage: 'View the serverless deployment template (e.g. "--view null | resources | functions | download")',
             required: false
+          },
+          gui: {
+            usage: 'Open an angular gui that displays deployment information (e.g. "--gui")',
+            required: false
           }
         },
       },
@@ -36,6 +43,34 @@ class ServerlessPlugin {
       'before:deploy:deploy': this.beforeDeploy.bind(this),     
       'after:deploy:deploy': this.afterDeploy.bind(this),
     };
+
+    process.on('exit', this.mainExit.bind(this,{cleanup:"exit"}));
+    process.on('SIGINT', this.mainExit.bind(this, {exit:"SIGINT"}));
+    process.on('SIGUSR1', this.mainExit.bind(this, {exit:"SIGUSR1"}));
+    process.on('SIGUSR2', this.mainExit.bind(this, {exit:"SIGUSR2"}));
+    process.on('uncaughtException', this.mainExit.bind(this, {exit:"uncaughtException"}));
+
+  }
+
+  mainExit(options, exitCode) {
+      if (!this.exitApp) {
+        let intv = setInterval(() => {
+          if (this.exitApp) {
+            this.serverless.cli.log("Thank you for using SLS Deployalizer!");
+            process.exit();
+            clearInterval(intv);
+          } else if (!this.gui) {
+            this.serverless.cli.log("Thank you for using SLS Deployalizer!");
+            process.exit();
+            clearInterval(intv);
+          }
+        }, 500);
+    }
+  }
+
+  onGuiExit(options, exitCode) {
+    this.serverless.cli.log("Closing Gui Connection");
+    this.exitApp = true;
   }
 
   isSlsd(option) {
@@ -46,7 +81,7 @@ class ServerlessPlugin {
     }
   }
 
-  beforeDeploy() {
+  beforeDeploy() {    
     this.startDeploy = new Date().getTime();
     if (this.isSlsd()) {
       this.serverless.cli.log('');
@@ -160,22 +195,57 @@ class ServerlessPlugin {
     }
   }
 
+  runGui() {
+    this.serverless.cli.log("");
+    this.serverless.cli.log("Opening Gui...");
+    this.serverless.cli.log("hit ctrl-c to exit");
+    this.serverless.cli.log("");
+    process.chdir('gui');
+    this.gui = spawn('npm', ['run','dev'], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    this.gui.on('exit', this.onGuiExit.bind(this,{cleanup:true}));
+    this.gui.on('SIGINT', this.onGuiExit.bind(this, {exit:true}));
+    this.gui.on('SIGUSR1', this.onGuiExit.bind(this, {exit:true}));
+    this.gui.on('SIGUSR2', this.onGuiExit.bind(this, {exit:true}));
+    this.gui.on('uncaughtException', this.onExit.bind(this, {exit:true}));
+    this.gui.stdio[1].on('data', (data) => {
+      this.serverless.cli.log(data.toString());
+    });
+    const intv = setInterval(() => {
+      if (this.exitApp) {
+        clearInterval(intv);
+      }
+    }, 500);
+  }
+
   afterDeploy() {
     if (this.isSlsd()) {
-      const spawn = child_process.spawn;
       const customOptions = this.getCustomOptions();
       const options = ['invoke', '--function=initstack', ...customOptions];
+      let invokeComplete = false;
       const child = spawn('/usr/local/bin/sls', options, {
-        stdio: ['inherit', 'pipe', 'pipe'],
-        detached: true,
+        stdio: ['pipe', 'pipe', 'pipe']
       });
-      child.stdout.on('data', (data) => {
+      child.stdio[1].on('data', (data) => {
         const response = JSON.parse(data.toString());
         if (this.isSlsd('view')) {
           this.processView(response);
         }
         this.printResponse(response);
-      });  
+        invokeComplete = true;
+      });
+      const waitforinvoke = setInterval( () => {
+        if (invokeComplete) {
+          if (this.isSlsd('gui')) {
+            this.runGui();
+          } else {
+            this.serverless.cli.log("Thank you for using SLS Deployalizer!");
+          }
+          clearInterval(waitforinvoke);
+        }
+      }, 500);
+
     } 
   }
 
@@ -192,9 +262,6 @@ class ServerlessPlugin {
   }
 
   printResponse(data) {
-    // this.serverless.cli.log(jsonStr);
-    // const data = JSON.parse(jsonStr);
-    // const body = JSON.parse(data.body);
     const keys = Object.keys(data);
     this.serverless.cli.log('');
     this.serverless.cli.log('--------------------------------------');
