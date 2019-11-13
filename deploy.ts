@@ -12,12 +12,15 @@ export class Deploy {
     async getLatestSLSTemplateObject(): Promise<S3.Object> {
         const params = {
             Bucket: this.deploy.s3Bucket,
-            Prefix: this.deploy.s3Prefix,
-            MaxKeys: 10 // appears that sls keeps a max history of 5 deployments with .zip and .json files
+            Prefix: this.deploy.s3Prefix
         };
         const response = await this.deploy.s3.listObjectsV2(params).promise();
         if (response.Contents.length > 1) {
-            return response.Contents[response.Contents.length - 2];
+            for (let i = response.Contents.length - 1; i >= 0; i--) {
+                if (response.Contents[i].Key.match(/.json$/)) {
+                    return response.Contents[i];
+                }
+            }
         }
         return null;
     }
@@ -25,7 +28,7 @@ export class Deploy {
     parseJsonStrToDynamoDBItem(jsonStr: string): object {
         // DynamoDb Items cannot contain empty strings
         // this replaces "" with null unless the qoute is preceded by an escape char i.e. \"
-        jsonStr = jsonStr.replace(/(?<!\\)"(?<!\\)"/g, null); 
+        jsonStr = jsonStr.replace(/(?<!\\)"(?<!\\)"/g, null);
         return JSON.parse(jsonStr);
     }
 
