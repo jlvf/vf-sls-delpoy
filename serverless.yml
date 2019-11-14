@@ -48,8 +48,25 @@ functions:
       DDB_TABLE_NAME: ${self:provider.environment.DYNAMODB_TABLE_NAME}
       SLS_DEPLOY_BUCKET: ${self:provider.deploymentBucket}
       SLS_BUCKET_PREFIX: serverless/${self:service.name}/${self:provider.stage}
+    events:
+      - http: 
+          path: slsd
+          method: post
 resources:
   Resources:
+    IamAssumeRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:provider.stackName}-${self:provider.stage}-deploy-assume-role
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+                  - apigateway.amazonaws.com
+              Action: sts:AssumeRole
     DynamoDbDeployTable:
       Type: AWS::DynamoDB::Table
       Properties:
