@@ -47,6 +47,12 @@ sls deploy --slsd --stats --view resources,download ...
 |functions  | Display only the lambda functions |
 |download   | Saves the active templates file in ./templates/...<br> ./templates will be created if it does not exist |
 
+## Gui
+
+When you run `sls --slsd --gui` then after deployment the sls deployalizer plugin will get the api gateway stage endpoint and place it in gui/proxy.config.json file and then open your default browser and make an api request to the same lambda function used after deployment.
+
+On the first run sls deployalizer will attempt to install the angular application inside of the gui folder using npm install. you can see this in the gui class. 
+
 ## Resources
 
 | URL       | Description |
