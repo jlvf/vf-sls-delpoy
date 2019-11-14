@@ -75,7 +75,7 @@ class Gui {
   
     loadGatewayEndpoint() {
       const options = [];
-      if (typeof this.options['aws-profile'] !== 'undefined') {
+      if (typeof this.parent.options['aws-profile'] !== 'undefined') {
         options.push('--aws-profile');
         options.push(this.options['aws-profile']);
       }
