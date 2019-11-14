@@ -106,8 +106,13 @@ sls deploy --aws-profile myaws
 ```
 
 
-## Questions
+## Notes
 
 1. In serverless.yml when concatinating the service name in the functions enviornment variables I tried Fn:Join; it returned [object,object] the solution was to simply do the serverless ${self:...}/${self:..} this gave the desired results; However, when creating the DynamoDB table name in the provider environment variables Fn:Join worked as expected. Is this a serverless peculiarity?
+  **using ${...} works everywhere in serverless.yml**
 
-2. Is there a way to invoke my local function on aws without deploying?
+1. Refering to deploy.ts -> getLatestSLSTemplateObject()) When adding/modifying serverless.yml aws resources the serverless s3 deployment bucket may receive more than one lambda zip file. This changes how I initially retrevied the json template by using the last two files from the s3 List. A better approach is to use a for or while loop to search for the json file. An even better approach would be to split the Key of the bucket and verify that each key you are checking are in the same directory via the timestamp from the Key. Do not use the LastModifed in this approach because each file can have a diffrent value that may or may not group the files together correctly.
+
+1. Is there a way to create an AssumeRolePolicyDocument using the serverless side; without writing it in the Resources section of serverless.yml?
+
+1. I had a problem with the spawn child process dying before all the data was printed to stdin. This occured with --view download because the template is simi large: half of the json would arrive and then the child would die before I could parse the entire string. I solved this by adding exit handelers. Is there a better way to force the child to wait for more input or are exit handlers the best approach?
