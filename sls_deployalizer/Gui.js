@@ -77,7 +77,7 @@ class Gui {
       const options = [];
       if (typeof this.parent.options['aws-profile'] !== 'undefined') {
         options.push('--aws-profile');
-        options.push(this.options['aws-profile']);
+        options.push(this.parent.options['aws-profile']);
       }
       this.parent.serverless.cli.log('updating proxy.config.json...')
       const child = spawn('sls', ['info', ...options], {
