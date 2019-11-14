@@ -32,7 +32,7 @@ class Gui {
       child.on('SIGUSR2', this.onInstallGuiExit.bind(this, {exit:true}));
       child.on('uncaughtException', this.onInstallGuiExit.bind(this, {exit:true}));
       child.stdio[1].on('data', (data) => {
-        this.serverless.cli.log(data.toString());
+        this.parent.serverless.cli.log(data.toString());
       });
     }
   
@@ -74,8 +74,13 @@ class Gui {
     }
   
     loadGatewayEndpoint() {
+      const options = [];
+      if (typeof this.options['aws-profile'] !== 'undefined') {
+        options.push('--aws-profile');
+        options.push(this.options['aws-profile']);
+      }
       this.parent.serverless.cli.log('updating proxy.config.json...')
-      const child = spawn('sls', ['info', '--aws-profile', 'myaws'], {
+      const child = spawn('sls', ['info', ...options], {
         stdio: ['pipe', 'pipe', 'pipe']
       });
       child.stdio[1].on('data', (data) => {
