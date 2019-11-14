@@ -9,4 +9,5 @@ export interface DeployConstructInterface {
     slsServiceName: string;
     tableName: string;
     deploytime_utc_ms: number;
+    cfOutputs?: Array<any>;
 }

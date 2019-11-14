@@ -3,4 +3,5 @@ export interface DeployTableSchemaInterface {
     created_utc_ms: number;
     deploytime_utc_ms: number;
     template: object;
+    cloudformationOutputs: Array<any>;
 }
