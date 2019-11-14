@@ -18,7 +18,7 @@ Make sure nodejs, npm, serverless and aws-cli are installed. This application ha
 
 <img src="https://github.com/oussiden/vf-sls-delpoy/blob/master/example.png" alt="SLS Deployalzier" style='height: 100px;'/>
 
-When you run `sls deploy --slsd ...`, you will see the above logo. Below the logo will be a list of all the slsd commands that you supplied. If you supplied the `--gui` command the sls deployalizer will load an angular application and display the deployment results and also an aggrigated list of past deployments. 
+When you run `sls deploy --slsd ...`, you will see the above logo. Below the logo will be a list of all the slsd commands that you supplied. If you supplied the `--gui` command the sls deployalizer will load an angular application and display the deployment results and also an aggregated list of past deployments. 
 
 
 ## SLS Deployalizer Plugin Commands
@@ -38,7 +38,7 @@ sls deploy --slsd --stats --view resources,download ...
 
 ### **View Options**
 
-> --view options can be mixed and matched by delaminating them with a comma: `--view download,resources,functions`
+> --view options can be mixed and matched by delaminating them with a comma: `--view download,resources,functions` or you can use them individually
 
 | Option  | Description |
 |:----------| :---------- |
