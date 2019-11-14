@@ -2,12 +2,24 @@
 
 This application is an example of how to integrate [serverless.com](serverless.com) with an **AWS**, **LAMBDA** and **DynamoDB** CI/CD deployment. Checkout [sls.md](https://github.com/oussiden/vf-sls-delpoy/blob/master/sls.md) for basic serverless CLI commands.
 
+## System Requirements
+
+I tested this application on both Mac and Ubuntu 18.04 but I did not test it in windows.
+
 ## Install
 
-Make sure nodejs, npm, serverless and aws-cli are installed
+Make sure nodejs, npm, serverless and aws-cli are installed. This application has an angular gui interface. If you use --gui it will install the node_modules automatically inside of the gui folder. If you do not have `ng serve` then do not use the --gui as it may give un expected results.
 
-1. Clone the repo and cd into the directory
+1. clone the repo and cd into the directory
 2. run `npm install`
+3. run `sls deploy --slsd --gui --aws-profile yourprofile`
+
+## What to expect
+
+<img src="https://github.com/oussiden/vf-sls-delpoy/blob/master/example.png" alt="SLS Deployalzier" style='height: 100px;'/>
+
+When you run `sls deploy --slsd ...`, you will see the above logo. Below the logo will be a list of all the slsd commands that you supplied. If you supplied the `--gui` command the sls deployalizer will load an angular application and display the deployment results and also an aggrigated list of past deployments. 
+
 
 ## SLS Deployalizer Plugin Commands
 
