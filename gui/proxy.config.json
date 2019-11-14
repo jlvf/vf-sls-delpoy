@@ -1,9 +1,11 @@
 {
     "/api/*": {
-        "target": "",
+        "target": "https://af2mplxo1b.execute-api.us-west-2.amazonaws.com/dev/slsd",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true,
-        "pathRewrite": {"^/api" : ""}
+        "pathRewrite": {
+            "^/api": ""
+        }
     }
 }

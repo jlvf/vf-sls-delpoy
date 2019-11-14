@@ -1,0 +1,28 @@
+.template-container {
+    width: 600px;
+    margin-top: 20px;
+}
+
+td:first-child {
+    width: 300px;
+    font-weight: bold
+}
+
+mat-card-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.cf-item {
+
+    margin-top: 5px;
+    border-bottom: thin solid lightgrey;
+
+    .cf-key {
+        font-weight: bold;
+    }
+}
+
+.resource-item {
+    border-bottom: thin solid lightgrey;
+}
