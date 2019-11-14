@@ -10,8 +10,15 @@ I tested this application on both Mac and Ubuntu 18.04 but I did not test it in 
 
 Make sure nodejs, npm, serverless and aws-cli are installed. This application has an angular gui interface. If you use --gui it will install the node_modules automatically inside of the gui folder. If you do not have `ng serve` then do not use the --gui as it may give un expected results.
 
+Make sure you change the aws deployment bucket in serverless.yml to match your deployment bucket
+
 1. clone the repo and cd into the directory
 2. run `npm install`
+3. run `cd sls_deployalizer`
+4. run `npm link`
+5. run `cd ../`
+6. run `npm link sls_deployalizer`
+7. run `serverless login`
 3. run `sls deploy --slsd --gui --aws-profile yourprofile`
 
 ## What to expect
