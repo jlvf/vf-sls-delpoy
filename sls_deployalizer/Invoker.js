@@ -23,7 +23,7 @@ class Invoker {
   
     invokeLambdaFunction(options) {
       let invokeComplete = false;
-      this.subProcess = spawn('/usr/local/bin/sls', options, {
+      this.subProcess = spawn('sls', options, {
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: true
       });
